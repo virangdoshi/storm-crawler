@@ -16,12 +16,12 @@ package com.digitalpebble.stormcrawler.protocol.selenium;
 
 import com.digitalpebble.stormcrawler.Metadata;
 import com.digitalpebble.stormcrawler.protocol.ProtocolResponse;
-import com.digitalpebble.stormcrawler.util.Configurable;
+import com.digitalpebble.stormcrawler.util.AbstractConfigurable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-public abstract class NavigationFilter implements Configurable {
+public abstract class NavigationFilter extends AbstractConfigurable {
     /** The end result comes from the first filter to return non-null * */
     public abstract @Nullable ProtocolResponse filter(
             @NotNull RemoteWebDriver driver, @NotNull Metadata metadata);

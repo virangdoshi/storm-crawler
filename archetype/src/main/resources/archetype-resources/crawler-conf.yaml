@@ -27,7 +27,7 @@ config:
   # - customMetadataName
 
   # lists the metadata to persist to storage
-  # these are not transfered to the outlinks
+  # these are not transferred to the outlinks
   metadata.persist:
    - _redirTo
    - error.cause
@@ -48,6 +48,12 @@ config:
   # The fetched page will be trimmed to 65KB in this case
   # Set -1 to disable the limit.
   http.content.limit: 65536
+
+  urlfrontier.host: "localhost"
+  urlfrontier.port: 7071
+
+  urlfrontier.max.buckets: 50
+  urlfrontier.max.urls.per.bucket: 10
 
   # FetcherBolt queue dump => comment out to activate
   # if a file exists on the worker machine with the corresponding port number
@@ -85,7 +91,7 @@ config:
   # needed for parsing with Tika
   jsoup.treat.non.html.as.error: false
 
-  # restrics the documents types to be parsed with Tika
+  # restricts the documents types to be parsed with Tika
   parser.mimetype.whitelist:
    - application/.+word.*
    - application/.+excel.*

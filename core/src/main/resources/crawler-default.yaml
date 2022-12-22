@@ -226,7 +226,7 @@ config:
   fetchInterval.error: -1
 
   # custom fetch interval to be used when a document has the key/value in its metadata
-  # and has been fetched succesfully (value in minutes)
+  # and has been fetched successfully (value in minutes)
   # fetchInterval.FETCH_ERROR.isFeed=true
   # fetchInterval.isFeed=true: 10
 
@@ -242,6 +242,7 @@ config:
 
   # configuration for the classes extending AbstractIndexerBolt
   # indexer.md.filter: "someKey=aValue"
+  indexer.ignore.empty.fields: false
   indexer.url.fieldname: "url"
   indexer.text.fieldname: "content"
   indexer.text.maxlength: -1
