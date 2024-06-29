@@ -37,6 +37,8 @@ import crawlercommons.sitemaps.SiteMapURL.ChangeFrequency;
 import crawlercommons.sitemaps.UnknownFormatException;
 import crawlercommons.sitemaps.extension.Extension;
 import crawlercommons.sitemaps.extension.ExtensionMetadata;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -178,7 +180,7 @@ public class SiteMapParserBolt extends StatusEmitterBolt {
             String url, byte[] content, String contentType, Metadata parentMetadata)
             throws UnknownFormatException, IOException {
 
-        URL sURL = new URL(url);
+        URL sURL = Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         long start = System.currentTimeMillis();
         AbstractSiteMap siteMap;
         // let the parser guess what the mimetype is

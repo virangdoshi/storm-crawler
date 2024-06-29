@@ -20,6 +20,8 @@ import com.digitalpebble.stormcrawler.protocol.HttpRobotRulesParser;
 import com.digitalpebble.stormcrawler.protocol.ProtocolFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import crawlercommons.robots.BaseRobotRules;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
@@ -58,7 +60,7 @@ public class RobotsFilter extends URLFilter {
             @NotNull String urlToFilter) {
         URL target;
         try {
-            target = new URL(urlToFilter);
+            target = Urls.create(urlToFilter, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         } catch (MalformedURLException e) {
             return null;
         }

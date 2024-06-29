@@ -28,6 +28,8 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import crawlercommons.domains.PaidLevelDomain;
 import crawlercommons.robots.BaseRobotRules;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -260,7 +262,7 @@ public class SimpleFetcherBolt extends StatusEmitterBolt {
         URL url;
 
         try {
-            url = new URL(urlString);
+            url = Urls.create(urlString, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         } catch (MalformedURLException e) {
             LOG.error("{} is a malformed URL", urlString);
             // Report to status stream and ack
