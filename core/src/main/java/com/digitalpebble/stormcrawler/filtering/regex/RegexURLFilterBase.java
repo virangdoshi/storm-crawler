@@ -18,6 +18,7 @@ import com.digitalpebble.stormcrawler.Metadata;
 import com.digitalpebble.stormcrawler.filtering.URLFilter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import io.github.pixee.security.BoundedLineReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -83,7 +84,7 @@ public abstract class RegexURLFilterBase extends URLFilter {
             BufferedReader in = new BufferedReader(reader);
             String line;
 
-            while ((line = in.readLine()) != null) {
+            while ((line = BoundedLineReader.readLine(in, 5_000_000)) != null) {
                 if (line.length() == 0) {
                     continue;
                 }
