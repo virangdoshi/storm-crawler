@@ -19,6 +19,8 @@ import com.digitalpebble.stormcrawler.util.ConfUtils;
 import com.digitalpebble.stormcrawler.util.Configurable;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -149,7 +151,7 @@ public class JSoupFilters extends JSoupFilter implements JSONResource {
 
         String url = cmd.getArgs()[0];
 
-        byte[] content = IOUtils.toByteArray((new URL(url)).openStream());
+        byte[] content = IOUtils.toByteArray((Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS)).openStream());
 
         Document doc = Jsoup.parse(new String(content), url);
 

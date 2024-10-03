@@ -19,6 +19,8 @@ import com.digitalpebble.stormcrawler.util.ConfUtils;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.google.common.primitives.Ints;
 import crawlercommons.robots.BaseRobotRules;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
@@ -119,7 +121,7 @@ public class HttpRobotRulesParser extends RobotRulesParser {
         List<Integer> bytesFetched = new LinkedList<>();
         try {
             ProtocolResponse response =
-                    http.getProtocolOutput(new URL(url, "/robots.txt").toString(), fetchRobotsMd);
+                    http.getProtocolOutput(Urls.create(url, "/robots.txt", Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).toString(), fetchRobotsMd);
             int code = response.getStatusCode();
             bytesFetched.add(response.getContent() != null ? response.getContent().length : 0);
             // try one level of redirection ?
@@ -129,9 +131,9 @@ public class HttpRobotRulesParser extends RobotRulesParser {
                     if (!redirection.startsWith("http")) {
                         // RFC says it should be absolute, but apparently it
                         // isn't
-                        redir = new URL(url, redirection);
+                        redir = Urls.create(url, redirection, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
                     } else {
-                        redir = new URL(redirection);
+                        redir = Urls.create(redirection, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
                     }
                     if (redir.getPath().equals("/robots.txt")) {
                         // only if the path of the redirect target is

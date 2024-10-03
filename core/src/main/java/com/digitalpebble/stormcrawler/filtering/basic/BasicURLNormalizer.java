@@ -18,6 +18,8 @@ import com.digitalpebble.stormcrawler.Metadata;
 import com.digitalpebble.stormcrawler.filtering.URLFilter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.net.IDN;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -98,7 +100,7 @@ public class BasicURLNormalizer extends URLFilter {
 
         if (removeAnchorPart) {
             try {
-                URL theURL = new URL(urlToFilter);
+                URL theURL = Urls.create(urlToFilter, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
                 String anchor = theURL.getRef();
                 if (anchor != null) urlToFilter = urlToFilter.replace("#" + anchor, "");
             } catch (MalformedURLException e) {
@@ -117,7 +119,7 @@ public class BasicURLNormalizer extends URLFilter {
         if (urlToFilter == null) return null;
 
         try {
-            URL theURL = new URL(urlToFilter);
+            URL theURL = Urls.create(urlToFilter, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             String file = theURL.getFile();
             String protocol = theURL.getProtocol();
             String host = theURL.getHost();
@@ -149,7 +151,7 @@ public class BasicURLNormalizer extends URLFilter {
                 hasChanged = true;
             }
             if (hasChanged) {
-                urlToFilter = new URL(protocol, host, port, file2).toString();
+                urlToFilter = Urls.create(protocol, host, port, file2, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).toString();
             }
         } catch (MalformedURLException e) {
             return null;
@@ -220,7 +222,7 @@ public class BasicURLNormalizer extends URLFilter {
         try {
             // Handle illegal characters by making a url first
             // this will clean illegal characters like |
-            URL url = new URL(urlToFilter);
+            URL url = Urls.create(urlToFilter, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
 
             String query = url.getQuery();
             String path = url.getPath();
@@ -282,7 +284,7 @@ public class BasicURLNormalizer extends URLFilter {
                 newFile.append('#').append(url.getRef());
             }
 
-            return new URL(url.getProtocol(), url.getHost(), url.getPort(), newFile.toString())
+            return Urls.create(url.getProtocol(), url.getHost(), url.getPort(), newFile.toString(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS)
                     .toString();
         } catch (MalformedURLException e) {
             LOG.warn("Invalid urlToFilter {}. {}", urlToFilter, e);

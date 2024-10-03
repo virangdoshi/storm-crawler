@@ -14,6 +14,8 @@
  */
 package com.digitalpebble.stormcrawler.util;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -301,7 +303,7 @@ public class CookieConverterTest {
 
     private URL getUrl(String urlString) {
         try {
-            return new URL(urlString);
+            return Urls.create(urlString, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         } catch (MalformedURLException e) {
             return null;
         }
