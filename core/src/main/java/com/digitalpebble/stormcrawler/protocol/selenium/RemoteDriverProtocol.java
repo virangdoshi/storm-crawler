@@ -15,6 +15,8 @@
 package com.digitalpebble.stormcrawler.protocol.selenium;
 
 import com.digitalpebble.stormcrawler.util.ConfUtils;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.net.URL;
 import java.time.Duration;
 import java.util.Iterator;
@@ -65,7 +67,7 @@ public class RemoteDriverProtocol extends SeleniumProtocol {
         }
         try {
             for (String cdaddress : addresses) {
-                RemoteWebDriver driver = new RemoteWebDriver(new URL(cdaddress), capabilities);
+                RemoteWebDriver driver = new RemoteWebDriver(Urls.create(cdaddress, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS), capabilities);
                 Timeouts touts = driver.manage().timeouts();
                 int implicitWait = ConfUtils.getInt(conf, "selenium.implicitlyWait", 0);
                 int pageLoadTimeout = ConfUtils.getInt(conf, "selenium.pageLoadTimeout", 0);

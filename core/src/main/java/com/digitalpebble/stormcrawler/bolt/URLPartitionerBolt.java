@@ -18,6 +18,8 @@ import com.digitalpebble.stormcrawler.Constants;
 import com.digitalpebble.stormcrawler.Metadata;
 import com.digitalpebble.stormcrawler.util.ConfUtils;
 import crawlercommons.domains.PaidLevelDomain;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -75,7 +77,7 @@ public class URLPartitionerBolt extends BaseRichBolt {
         if (partitionKey == null) {
             URL u;
             try {
-                u = new URL(url);
+                u = Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
                 host = u.getHost();
             } catch (MalformedURLException e1) {
                 eventCounter.scope("Invalid URL").incrBy(1);

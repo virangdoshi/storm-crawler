@@ -21,6 +21,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -176,7 +178,7 @@ public class ParseFilters extends ParseFilter implements JSONResource {
 
         String url = cmd.getArgs()[0];
 
-        byte[] content = IOUtils.toByteArray((new URL(url)).openStream());
+        byte[] content = IOUtils.toByteArray((Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS)).openStream());
 
         Document doc = Jsoup.parse(new String(content), url);
 

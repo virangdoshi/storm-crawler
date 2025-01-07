@@ -26,6 +26,8 @@ import com.digitalpebble.stormcrawler.util.ConfUtils;
 import com.digitalpebble.stormcrawler.util.PerSecondReducer;
 import crawlercommons.domains.PaidLevelDomain;
 import crawlercommons.robots.BaseRobotRules;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
@@ -479,7 +481,7 @@ public class FetcherBolt extends StatusEmitterBolt {
                 boolean asap = false;
 
                 try {
-                    URL url = new URL(fit.url);
+                    URL url = Urls.create(fit.url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
                     Protocol protocol = protocolFactory.getProtocol(url);
 
                     if (protocol == null)
@@ -918,7 +920,7 @@ public class FetcherBolt extends StatusEmitterBolt {
         URL url;
 
         try {
-            url = new URL(urlString);
+            url = Urls.create(urlString, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         } catch (MalformedURLException e) {
             LOG.error("{} is a malformed URL", urlString);
 

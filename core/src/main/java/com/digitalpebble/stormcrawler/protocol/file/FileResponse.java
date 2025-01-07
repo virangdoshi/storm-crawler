@@ -17,6 +17,8 @@ package com.digitalpebble.stormcrawler.protocol.file;
 import com.digitalpebble.stormcrawler.Metadata;
 import com.digitalpebble.stormcrawler.protocol.HttpHeaders;
 import com.digitalpebble.stormcrawler.protocol.ProtocolResponse;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -47,7 +49,7 @@ public class FileResponse {
         content = new byte[0];
         statusCode = HttpStatus.SC_INTERNAL_SERVER_ERROR;
 
-        URL url = new URL(u);
+        URL url = Urls.create(u, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
 
         if (!url.getPath().equals(url.getFile())) {
             LOG.warn("url.getPath() != url.getFile(): {}.", url);
