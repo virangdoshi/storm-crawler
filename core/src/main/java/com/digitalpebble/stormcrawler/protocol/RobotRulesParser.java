@@ -21,6 +21,8 @@ import crawlercommons.robots.BaseRobotRules;
 import crawlercommons.robots.SimpleRobotRules;
 import crawlercommons.robots.SimpleRobotRules.RobotRulesMode;
 import crawlercommons.robots.SimpleRobotRulesParser;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -154,7 +156,7 @@ public abstract class RobotRulesParser {
     public BaseRobotRules getRobotRulesSet(Protocol protocol, String url) {
         URL u;
         try {
-            u = new URL(url);
+            u = Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         } catch (Exception e) {
             return EMPTY_RULES;
         }

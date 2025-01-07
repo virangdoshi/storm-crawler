@@ -22,6 +22,8 @@ import com.digitalpebble.stormcrawler.parse.ParseResult;
 import com.digitalpebble.stormcrawler.util.MetadataTransfer;
 import com.digitalpebble.stormcrawler.util.URLUtil;
 import com.fasterxml.jackson.databind.JsonNode;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -70,7 +72,7 @@ public class LinkParseFilter extends XPathFilter {
 
         java.net.URL sourceUrl;
         try {
-            sourceUrl = new URL(URL);
+            sourceUrl = Urls.create(URL, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         } catch (MalformedURLException e1) {
             // we would have known by now as previous components check whether
             // the URL is valid

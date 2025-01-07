@@ -14,6 +14,8 @@
  */
 package com.digitalpebble.stormcrawler.util;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.net.IDN;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -42,12 +44,12 @@ public class URLUtil {
             return fixPureQueryTargets(base, target);
         }
 
-        return new URL(base, target);
+        return Urls.create(base, target, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
     }
 
     /** Handle the case in RFC3986 section 5.4.1 example 7, and similar. */
     static URL fixPureQueryTargets(URL base, String target) throws MalformedURLException {
-        if (!target.startsWith("?")) return new URL(base, target);
+        if (!target.startsWith("?")) return Urls.create(base, target, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
 
         String basePath = base.getPath();
         String baseRightMost = "";
@@ -58,7 +60,7 @@ public class URLUtil {
 
         if (target.startsWith("?")) target = baseRightMost + target;
 
-        return new URL(base, target);
+        return Urls.create(base, target, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
     }
 
     /**
@@ -80,7 +82,7 @@ public class URLUtil {
         // the target contains params information or the base doesn't then no
         // conversion necessary, return regular URL
         if (target.indexOf(';') >= 0 || base.toString().indexOf(';') == -1) {
-            return new URL(base, target);
+            return Urls.create(base, target, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         }
 
         // get the base url and it params information
@@ -99,7 +101,7 @@ public class URLUtil {
             target += params;
         }
 
-        return new URL(base, target);
+        return Urls.create(base, target, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
     }
 
     private static Pattern IP_PATTERN = Pattern.compile("(\\d{1,3}\\.){3}(\\d{1,3})");
@@ -119,7 +121,7 @@ public class URLUtil {
      * @throws MalformedURLException
      */
     public static String[] getHostSegments(String url) throws MalformedURLException {
-        return getHostSegments(new URL(url));
+        return getHostSegments(Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS));
     }
 
     /**
@@ -130,7 +132,7 @@ public class URLUtil {
      */
     public static String getHost(String url) {
         try {
-            return new URL(url).getHost().toLowerCase(Locale.ROOT);
+            return Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).getHost().toLowerCase(Locale.ROOT);
         } catch (MalformedURLException e) {
             return null;
         }
@@ -148,7 +150,7 @@ public class URLUtil {
             // get the full url, and replace the query string with and empty
             // string
             url = url.toLowerCase(Locale.ROOT);
-            String queryStr = new URL(url).getQuery();
+            String queryStr = Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).getQuery();
             return (queryStr != null) ? url.replace("?" + queryStr, "") : url;
         } catch (MalformedURLException e) {
             return null;
@@ -157,7 +159,7 @@ public class URLUtil {
 
     public static String toASCII(String url) {
         try {
-            URL u = new URL(url);
+            URL u = Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             URI p =
                     new URI(
                             u.getProtocol(),
@@ -176,7 +178,7 @@ public class URLUtil {
 
     public static String toUNICODE(String url) {
         try {
-            URL u = new URL(url);
+            URL u = Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             URI p =
                     new URI(
                             u.getProtocol(),

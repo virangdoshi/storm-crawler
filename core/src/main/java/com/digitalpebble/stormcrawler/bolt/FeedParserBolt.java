@@ -31,6 +31,8 @@ import com.rometools.rome.feed.synd.SyndContent;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.SyndFeedInput;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -168,7 +170,7 @@ public class FeedParserBolt extends StatusEmitterBolt {
             feed = input.build(new InputSource(is));
         }
 
-        URL sURL = new URL(url);
+        URL sURL = Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
 
         List<SyndEntry> entries = feed.getEntries();
         for (SyndEntry entry : entries) {
