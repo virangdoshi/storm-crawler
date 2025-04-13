@@ -31,6 +31,8 @@ import com.digitalpebble.stormcrawler.util.ConfUtils;
 import com.digitalpebble.stormcrawler.util.InitialisationUtil;
 import com.digitalpebble.stormcrawler.util.MetadataTransfer;
 import com.digitalpebble.stormcrawler.util.URLUtil;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -189,7 +191,7 @@ public class ParserBolt extends BaseRichBolt {
 
         // as well as the filename
         try {
-            URL _url = new URL(url);
+            URL _url = Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             md.set(TikaCoreProperties.RESOURCE_NAME_KEY, _url.getFile());
         } catch (MalformedURLException e1) {
             throw new IllegalStateException("Malformed URL", e1);
@@ -357,7 +359,7 @@ public class ParserBolt extends BaseRichBolt {
 
         URL url_;
         try {
-            url_ = new URL(parentURL);
+            url_ = Urls.create(parentURL, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         } catch (MalformedURLException e1) {
             // we would have known by now as previous
             // components check whether the URL is valid
