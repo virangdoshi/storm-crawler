@@ -17,6 +17,7 @@ package com.digitalpebble.stormcrawler.spout;
 import com.digitalpebble.stormcrawler.Constants;
 import com.digitalpebble.stormcrawler.persistence.Status;
 import com.digitalpebble.stormcrawler.util.StringTabScheme;
+import io.github.pixee.security.BoundedLineReader;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -136,7 +137,7 @@ public class FileSpout extends BaseRichSpout {
 
         String line = null;
         int linesRead = 0;
-        while (linesRead < BATCH_SIZE && (line = currentBuffer.readLine()) != null) {
+        while (linesRead < BATCH_SIZE && (line = BoundedLineReader.readLine(currentBuffer, 5_000_000)) != null) {
             if (StringUtils.isBlank(line)) continue;
             if (line.startsWith("#")) continue;
             buffer.add(line.trim().getBytes(StandardCharsets.UTF_8));
