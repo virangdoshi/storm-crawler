@@ -34,6 +34,8 @@ import com.digitalpebble.stormcrawler.util.CharsetIdentification;
 import com.digitalpebble.stormcrawler.util.ConfUtils;
 import com.digitalpebble.stormcrawler.util.RefreshTag;
 import com.digitalpebble.stormcrawler.util.RobotsTags;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -264,7 +266,7 @@ public class JSoupParserBolt extends StatusEmitterBolt {
             } else {
                 final Elements links = jsoupDoc.select("a[href]");
                 slinks = new HashMap<>(links.size());
-                final URL baseURL = new URL(url);
+                final URL baseURL = Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
                 for (Element link : links) {
                     // nofollow
                     boolean noFollow = "nofollow".equalsIgnoreCase(link.attr("rel"));
@@ -343,7 +345,7 @@ public class JSoupParserBolt extends StatusEmitterBolt {
 
                     // https://github.com/DigitalPebble/storm-crawler/issues/954
                     if (allowRedirs() && StringUtils.isNotBlank(redirection)) {
-                        emitOutlink(tuple, new URL(url), redirection, metadata);
+                        emitOutlink(tuple, Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS), redirection, metadata);
                     }
 
                     // Mark URL as redirected
@@ -486,7 +488,7 @@ public class JSoupParserBolt extends StatusEmitterBolt {
         final Map<String, Outlink> outlinks = new HashMap<>();
         URL sourceUrl;
         try {
-            sourceUrl = new URL(url);
+            sourceUrl = Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         } catch (MalformedURLException e) {
             // we would have known by now as previous components check whether
             // the URL is valid

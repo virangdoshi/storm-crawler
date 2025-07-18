@@ -23,6 +23,8 @@ import com.digitalpebble.stormcrawler.protocol.ProtocolResponse.TrimmedContentRe
 import com.digitalpebble.stormcrawler.proxy.SCProxy;
 import com.digitalpebble.stormcrawler.util.ConfUtils;
 import com.digitalpebble.stormcrawler.util.CookieConverter;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
@@ -250,7 +252,7 @@ public class HttpProtocol extends AbstractHttpProtocol {
             return;
         }
         try {
-            final List<Cookie> cookies = CookieConverter.getCookies(cookieStrings, new URL(url));
+            final List<Cookie> cookies = CookieConverter.getCookies(cookieStrings, Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS));
             for (Cookie c : cookies) {
                 rb.addHeader("Cookie", c.getName() + "=" + c.getValue());
             }

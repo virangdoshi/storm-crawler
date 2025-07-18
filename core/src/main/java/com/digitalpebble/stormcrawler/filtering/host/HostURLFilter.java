@@ -18,6 +18,8 @@ import com.digitalpebble.stormcrawler.Metadata;
 import com.digitalpebble.stormcrawler.filtering.URLFilter;
 import com.fasterxml.jackson.databind.JsonNode;
 import crawlercommons.domains.PaidLevelDomain;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
@@ -79,7 +81,7 @@ public class HostURLFilter extends URLFilter {
 
         URL tURL;
         try {
-            tURL = new URL(urlToFilter);
+            tURL = Urls.create(urlToFilter, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         } catch (MalformedURLException e1) {
             return null;
         }

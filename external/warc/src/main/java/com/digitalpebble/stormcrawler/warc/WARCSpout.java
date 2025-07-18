@@ -20,6 +20,8 @@ import com.digitalpebble.stormcrawler.persistence.Status;
 import com.digitalpebble.stormcrawler.protocol.ProtocolResponse;
 import com.digitalpebble.stormcrawler.spout.FileSpout;
 import com.digitalpebble.stormcrawler.util.ConfUtils;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.ByteBuffer;
@@ -142,7 +144,7 @@ public class WARCSpout extends FileSpout {
 
     private static ReadableByteChannel openChannel(String path) throws IOException {
         if (path.matches("^https?://.*")) {
-            URL warcUrl = new URL(path);
+            URL warcUrl = Urls.create(path, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             return Channels.newChannel(warcUrl.openStream());
         } else {
             return FileChannel.open(Paths.get(path));

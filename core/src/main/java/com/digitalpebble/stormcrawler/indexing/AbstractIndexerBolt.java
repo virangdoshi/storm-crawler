@@ -19,6 +19,8 @@ import com.digitalpebble.stormcrawler.util.ConfUtils;
 import com.digitalpebble.stormcrawler.util.RobotsTags;
 import com.digitalpebble.stormcrawler.util.URLUtil;
 import crawlercommons.domains.PaidLevelDomain;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -197,7 +199,7 @@ public abstract class AbstractIndexerBolt extends BaseRichBolt {
         }
 
         try {
-            URL sURL = new URL(url);
+            URL sURL = Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             URL canonical = URLUtil.resolveURL(sURL, canonicalValue);
 
             String sDomain = PaidLevelDomain.getPLD(sURL.getHost());
